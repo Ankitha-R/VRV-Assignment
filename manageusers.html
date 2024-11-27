@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+            padding-left: 20px;
+            color: #fff;
+        }
+        .sidebar .nav-item {
+            margin: 10px 0;
+        }
+        .sidebar .nav-link {
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-table th {
+            background-color: #f8f9fa;
+        }
+
+        .btn-permissions {
+            margin-right: 10px;
+        }
+
+        .dropdown-menu {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="admindashboard.html">Admin Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="viewusers.html">View Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="manageusers.html">Manage Users</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h3>Manage Users</h3>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Permissions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- User List with Permissions and Dropdowns -->
+                <tr id="user-johndoe">
+                    <td>John Doe</td>
+                    <td>johndoe@example.com</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="changeRole(this, 'John Doe')">Admin</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeRole(this, 'John Doe')">User</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="status-johndoe">
+                                Active
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="changeStatus(this, 'John Doe', 'Active')">Active</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeStatus(this, 'John Doe', 'Inactive')">Inactive</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-permissions" onclick="grantPermission(this, 'John Doe', 'Read')">Read</button>
+                        <button class="btn btn-warning btn-permissions" onclick="grantPermission(this, 'John Doe', 'Write')">Write</button>
+                        <button class="btn btn-danger btn-permissions" onclick="grantPermission(this, 'John Doe', 'Delete')">Delete</button>
+                    </td>
+                </tr>
+                <!-- Add 5 More Users -->
+                <tr id="user-janesmith">
+                    <td>Jane Smith</td>
+                    <td>janesmith@example.com</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                User
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="changeRole(this, 'Jane Smith')">Admin</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeRole(this, 'Jane Smith')">User</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="status-janesmith">
+                                Inactive
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="changeStatus(this, 'Jane Smith', 'Active')">Active</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeStatus(this, 'Jane Smith', 'Inactive')">Inactive</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-permissions" onclick="grantPermission(this, 'Jane Smith', 'Read')">Read</button>
+                        <button class="btn btn-warning btn-permissions" onclick="grantPermission(this, 'Jane Smith', 'Write')">Write</button>
+                        <button class="btn btn-danger btn-permissions" onclick="grantPermission(this, 'Jane Smith', 'Delete')">Delete</button>
+                    </td>
+                </tr>
+                <!-- Repeat for more users -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to update the status of a user
+        function changeStatus(element, userName, status) {
+            const statusButton = document.getElementById(`status-${userName.toLowerCase().replace(' ', '')}`);
+            statusButton.textContent = status;
+            localStorage.setItem(`${userName}-status`, status);
+        }
+
+        // Function to change the role of a user
+        function changeRole(element, userName) {
+            const roleButton = element.closest('.dropdown').querySelector('.dropdown-toggle');
+            const newRole = element.textContent;
+            roleButton.textContent = newRole;
+            localStorage.setItem(`${userName}-role`, newRole);
+        }
+
+        // Grant permissions to users
+        function grantPermission(element, userName, permissionType) {
+            element.classList.remove('btn-info', 'btn-warning', 'btn-danger');
+            element.classList.add('btn-success');
+            localStorage.setItem(`${userName}-${permissionType}-permission`, 'granted');
+        }
+    </script>
+</body>
+</html>
